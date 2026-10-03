@@ -1,0 +1,44 @@
+name: validate
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate shell
+        run: |
+          shellcheck scripts/*.sh
+          for file in scripts/*.sh; do
+            bash -n "$file"
+          done
+
+      - name: Validate Compose
+        run: |
+          docker compose -f compose.yml config >/dev/null
+          docker compose -f portainer-compose.yml config >/dev/null
+
+      - name: Validate YAML
+        run: |
+          python3 -m pip install --disable-pip-version-check pyyaml
+          python3 - <<'PY'
+          import pathlib
+          import yaml
+
+          for path in [
+              pathlib.Path("compose.yml"),
+              pathlib.Path("portainer-compose.yml"),
+              pathlib.Path("config/frigate.example.yml"),
+          ]:
+              with path.open("r", encoding="utf-8") as fh:
+                  yaml.safe_load(fh)
+              print("OK", path)
+          PY
