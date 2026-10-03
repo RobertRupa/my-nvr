@@ -87,8 +87,8 @@ for _ in $(seq 1 60); do
 done
 curl -kfsS https://127.0.0.1:9443/api/status >/dev/null 2>&1 || die "Portainer API did not become ready."
 
-log "Creating/updating Portainer Git stack"
-MY_NVR_REPO_URL="$REPO_URL" MY_NVR_REPO_REF="$REPO_REF" "$SCRIPT_DIR/portainer-bootstrap.sh"
+log "Creating Portainer Git stack"
+MY_NVR_REPO_URL="$REPO_URL" MY_NVR_REPO_REF="$REPO_REF" bash "$SCRIPT_DIR/portainer-bootstrap.sh"
 
 log "Waiting for Frigate"
 for _ in $(seq 1 60); do
