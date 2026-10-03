@@ -8,14 +8,15 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 PORTAINER_URL="${PORTAINER_URL:-https://127.0.0.1:9443}"
 PASSWORD_FILE="${PORTAINER_PASSWORD_FILE:-/etc/my-nvr/portainer-admin-password}"
 
-"$SCRIPT_DIR/backup.sh"
+bash "$SCRIPT_DIR/backup.sh"
 
 git -C "$REPO_DIR" fetch origin main
 git -C "$REPO_DIR" pull --ff-only origin main
 
 PASSWORD="$(cat "$PASSWORD_FILE")"
 AUTH="$(jq -cn --arg u admin --arg p "$PASSWORD" '{Username:$u,Password:$p}')"
-JWT="$(curl -kfsS -X POST "$PORTAINER_URL/api/auth" -H 'Content-Type: application/json' --data "$AUTH" | jq -r '.jwt')"
+JWT="$(curl -kfsS -X POST "$PORTAINER_URL/api/auth" -H 'Content-Type: application/json' --data "$AUTH" | jq -r '.jwt // empty')"
+[[ -n "$JWT" ]] || { echo "Portainer authentication failed." >&2; exit 1; }
 
 STACKS="$(curl -kfsS "$PORTAINER_URL/api/stacks" -H "Authorization: Bearer $JWT")"
 STACK_ID="$(jq -r '.[] | select(.Name == "my-nvr") | .Id' <<<"$STACKS" | head -n1)"
