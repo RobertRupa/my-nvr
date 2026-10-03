@@ -1,0 +1,14 @@
+# Minimal valid Frigate configuration.
+# A real camera is intentionally NOT required during initial installation.
+
+mqtt:
+  enabled: false
+
+cameras:
+  setup_placeholder:
+    enabled: false
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:554/unused
+          roles:
+            - detect
