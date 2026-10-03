@@ -1,0 +1,28 @@
+name: my-nvr-portainer
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:2.45.1
+    restart: always
+    command:
+      - -H
+      - unix:///var/run/docker.sock
+      - --http-disabled
+      - --admin-password-file
+      - /run/secrets/portainer_admin_password
+
+    ports:
+      - "9443:9443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+      - /etc/my-nvr/portainer-admin-password:/run/secrets/portainer_admin_password:ro
+
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  portainer_data:
+    name: portainer_data
