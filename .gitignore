@@ -1,0 +1,15 @@
+# Device-local configuration and secrets
+.env
+*.local.yml
+config/config.yml
+portainer-admin-password
+
+# Backups and runtime data
+backups/
+storage/
+recordings/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
