@@ -10,8 +10,8 @@ PASSWORD_FILE="${PORTAINER_PASSWORD_FILE:-/etc/my-nvr/portainer-admin-password}"
 
 bash "$SCRIPT_DIR/backup.sh"
 
-git -C "$REPO_DIR" fetch origin main
-git -C "$REPO_DIR" pull --ff-only origin main
+git -c safe.directory="$REPO_DIR" -C "$REPO_DIR" fetch origin main
+git -c safe.directory="$REPO_DIR" -C "$REPO_DIR" pull --ff-only origin main
 
 PASSWORD="$(cat "$PASSWORD_FILE")"
 AUTH="$(jq -cn --arg u admin --arg p "$PASSWORD" '{Username:$u,Password:$p}')"
