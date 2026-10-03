@@ -26,7 +26,7 @@ Portainer is a service/admin interface. Git is the source of truth for the appli
 
 /srv/frigate/                 recordings and media
 /var/lib/my-nvr/backups/      configuration backups
-/opt/my-nvr/repo/             optional local checkout
+/opt/my-nvr/repo/             local checkout
 ```
 
 ## Clean Debian installation
@@ -39,7 +39,7 @@ sudo apt install -y git
 sudo mkdir -p /opt/my-nvr
 sudo chown "$USER":"$USER" /opt/my-nvr
 git clone https://github.com/RobertRupa/my-nvr.git /opt/my-nvr/repo
-sudo /opt/my-nvr/repo/scripts/install.sh
+sudo bash /opt/my-nvr/repo/scripts/install.sh
 ```
 
 The installer:
@@ -51,7 +51,7 @@ The installer:
 5. creates persistent NVR directories,
 6. creates a minimal Frigate configuration that can boot without a real camera,
 7. installs and starts Portainer,
-8. creates the local Docker environment in Portainer,
+8. exposes the local Docker engine to Portainer,
 9. creates a Portainer Git stack named `my-nvr` from this repository,
 10. verifies that Frigate and Portainer are running.
 
@@ -83,7 +83,7 @@ Do not use Watchtower or blind `latest` pulls in production.
 Application versions are pinned in the repository. Update the repository only after validation, then use Portainer **Pull and redeploy** for the Git stack or run:
 
 ```bash
-sudo /opt/my-nvr/repo/scripts/update.sh
+sudo bash /opt/my-nvr/repo/scripts/update.sh
 ```
 
 The update helper backs up configuration before redeployment.
@@ -91,7 +91,7 @@ The update helper backs up configuration before redeployment.
 ## Backup
 
 ```bash
-sudo /opt/my-nvr/repo/scripts/backup.sh
+sudo bash /opt/my-nvr/repo/scripts/backup.sh
 ```
 
 Backups include Frigate configuration and the Portainer database volume export. Recordings are intentionally excluded.
@@ -99,7 +99,7 @@ Backups include Frigate configuration and the Portainer database volume export. 
 ## Diagnostics
 
 ```bash
-sudo /opt/my-nvr/repo/scripts/diagnostics.sh
+sudo bash /opt/my-nvr/repo/scripts/diagnostics.sh
 ```
 
 ## Hardware acceleration
